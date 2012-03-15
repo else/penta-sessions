@@ -36,7 +36,7 @@ let sessiondir_setter = function (value) {
     return value
 }
 
-group.options.add(['sessiondir', 'sesdir'],
+options.add(['sessiondir', 'sesdir'],
     'Default directory for saving sessions',
     'string', options.runtimepath+'/sessions/',
     {
@@ -44,7 +44,7 @@ group.options.add(['sessiondir', 'sesdir'],
     }
 )
 
-group.options.add(['sessionfile', 'sesfile'],
+options.add(['sessionfile', 'sesfile'],
     'Current session file',
     'string', '',
     {
@@ -52,7 +52,7 @@ group.options.add(['sessionfile', 'sesfile'],
     }
 )
 
-group.options.add(['sessionoptions', 'sesop'],
+options.add(['sessionoptions', 'sesop'],
     "Set what will be saved with :sessionsave",
     "stringlist", 'curdir,help,tabs',
     {
@@ -74,7 +74,7 @@ group.commands.add(['sessions[ave]','mkses[sion]'],
         let filename = args[0] ? (/^~?\//.test(args[0]) ? args[0] :
                 options.sessiondir+args[0]) : options.sessiondir+Date.now()+'.penta'
         let file = io.File(filename);
-      
+
         dactyl.assert(!file.exists() || args.bang, _("io.exists", file.path.quote()));
 
         let sesop = options.sessionoptions.toString();
@@ -84,7 +84,7 @@ group.commands.add(['sessions[ave]','mkses[sion]'],
             lines.push('silent cd '+options.sessiondir);
         else if (/curdir/.test(sesop))
             lines.push('silent cd '+io.cwd.path);
-        
+
         if (/runtime/.test(sesop))
             lines.push('set runtimepath='+options.runtimepath);
 
@@ -94,7 +94,7 @@ group.commands.add(['sessions[ave]','mkses[sion]'],
             cmds = array.flatten(cmds);
             lines = lines.concat(cmds);
         }
-        
+
         if (/tabs/.test(sesop)) {
             tabs.visibleTabs.forEach(function (tab, i) {
                 let loc = tab.linkedBrowser.contentDocument.location.href;
@@ -112,7 +112,7 @@ group.commands.add(['sessions[ave]','mkses[sion]'],
             dactyl.echoerr(_("io.notWriteable", file.path.quote()));
             return;
         };
-        
+
         options.sessionfile=file.path;
         dactyl.echomsg('Saved session to '+file.path.quote());
     }, {
@@ -126,7 +126,7 @@ group.commands.add(['sessiona[ppend]', 'sessionadd'],
     'Append tab(s) to a session file',
     function(args) {
         let file = io.File(/^~?\//.test(args[0]) ? args[0] : options.sessiondir+args[0]);
-      
+
         if (!file.exists() || !file.isWritable() || file.isDirectory()) {
             dactyl.echoerr(_("io.notWriteable", file.path.quote()));
             return;
@@ -147,7 +147,7 @@ group.commands.add(['sessiona[ppend]', 'sessionadd'],
             dactyl.echoerr(_("io.notWriteable", file.path.quote()));
             return;
         };
-        
+
         dactyl.echomsg('Appended tab(s) to session file '+file.path.quote());
     }, {
         argCount: '1',
@@ -228,7 +228,7 @@ var INFO =
         <default></default>
         <description>
             <p>
-                The session file you are currently working with, this will be set 
+                The session file you are currently working with, this will be set
                 automatically whenever you save or load a session, but you can set it
                 manually if you want.
             </p>
@@ -262,12 +262,12 @@ var INFO =
         <spec>ss</spec>
         <description>
             <p>
-                Saves current session to an ExCommand <oa>file</oa>, which can be 
+                Saves current session to an ExCommand <oa>file</oa>, which can be
                 restored later with <ex>:sessionload <oa>file</oa></ex>.
             </p>
             <p>
-                If <oa>file</oa> is just a basename or a relative path (without leading 
-                directory path), it will create a session file with that name in the 
+                If <oa>file</oa> is just a basename or a relative path (without leading
+                directory path), it will create a session file with that name in the
                 <o>sessiondir</o>. It also takes care of creating new directories if
                 specified.
                 <example>
